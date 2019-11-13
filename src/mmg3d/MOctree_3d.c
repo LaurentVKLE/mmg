@@ -44,7 +44,7 @@
 #define MMG3D_EPSRAD       1.00005
 #define MMG3D_EPSCON       1e-5 //5.0e-4
 #define MMG3D_LONMAX       4096
-
+7
 /**
  * \param mesh pointer toward a MMG5 mesh
  * \param q pointer toward the MOctree root
