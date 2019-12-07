@@ -1,0 +1,1 @@
+/usr/bin/c++   -g    CMakeFiles/mmg3d.dir/src/mmg3d/mmg3d.c.o  -o bin/mmg3d_debug -rdynamic lib/libmmg3d.a -lm 

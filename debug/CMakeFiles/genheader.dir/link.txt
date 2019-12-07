@@ -1,0 +1,1 @@
+/usr/bin/cc   -Wno-char-subscripts  -g    CMakeFiles/genheader.dir/scripts/genheader.c.o  -o bin/genheader -rdynamic 

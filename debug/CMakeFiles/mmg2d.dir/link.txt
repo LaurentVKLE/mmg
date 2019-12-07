@@ -1,0 +1,1 @@
+/usr/bin/c++   -g    CMakeFiles/mmg2d.dir/src/mmg2d/mmg2d.c.o  -o bin/mmg2d_debug -rdynamic lib/libmmg2d.a -lm 

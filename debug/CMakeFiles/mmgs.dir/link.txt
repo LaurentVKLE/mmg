@@ -1,0 +1,1 @@
+/usr/bin/c++   -g    CMakeFiles/mmgs.dir/src/mmgs/mmgs.c.o  -o bin/mmgs_debug -rdynamic lib/libmmgs.a -lm 

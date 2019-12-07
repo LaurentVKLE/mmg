@@ -44,7 +44,7 @@
 #define MMG3D_EPSRAD       1.00005
 #define MMG3D_EPSCON       1e-5 //5.0e-4
 #define MMG3D_LONMAX       4096
-7
+
 /**
  * \param mesh pointer toward a MMG5 mesh
  * \param q pointer toward the MOctree root
@@ -158,6 +158,91 @@ int  MMG3D_set_splitls_MOctree ( MMG5_pMesh mesh, MMG5_MOctree_s* q, MMG5_pSol s
 
   return 1;
 }
+
+/**
+ * \param mesh pointer toward the mesh structure
+ * \param q pointer toward the MOctree cell
+ *
+ * \return 1 if success, 0 if fail.
+ *
+ * Split an MOctree cell \ref q into \ref MMG3D_SIZE_OCTREESONS MOctree Cells one time.
+ * \ref q must be a leaf.
+ *
+ */
+ int  MMG3D_one_split_MOctree_s ( MMG5_pMesh mesh,MMG5_MOctree_s* q) {
+   int i;
+   int depth_max = mesh->octree->depth_max;
+   int ncells_x = mesh->freeint[0];
+   int ncells_y = mesh->freeint[1];
+   int ncells_z = mesh->freeint[2];
+
+   if(q->depth < depth_max)
+   {
+     q->nsons = 8;
+     MMG5_ADD_MEM(mesh,q->nsons*sizeof(MMG5_MOctree_s),"MOctree sons",
+                  return 0);
+     MMG5_SAFE_MALLOC(q->sons,q->nsons, MMG5_MOctree_s, return 0);
+     for(i=0; i<q->nsons; i++)
+     {
+       MMG3D_init_MOctree_s(mesh, &q->sons[i], 0, q->depth + 1, 0);
+
+       /*calculus of octree coordinates and ip*/
+       int power = pow(2,depth_max-(q->depth+1));
+
+       q->sons[i].coordoct[0]=q->coordoct[0];
+       q->sons[i].coordoct[1]=q->coordoct[1];
+       q->sons[i].coordoct[2]=q->coordoct[2];
+
+       if(i==1)
+       {
+         q->sons[i].coordoct[0]+=power;
+         printf("power  = %d\n",q->sons[i].coordoct[0]);
+       }
+       else if(i==2)
+       {
+         q->sons[i].coordoct[1]+=power;
+       }
+       else if(i==3)
+       {
+         q->sons[i].coordoct[0]+=power;
+         q->sons[i].coordoct[1]+=power;
+       }
+       else if(i==4)
+       {
+         q->sons[i].coordoct[2]+=power;
+       }
+       else if(i==5)
+       {
+         q->sons[i].coordoct[0]+=power;
+         q->sons[i].coordoct[2]+=power;
+       }
+       else if(i==6)
+       {
+         q->sons[i].coordoct[1]+=power;
+         q->sons[i].coordoct[2]+=power;
+       }
+       else if(i==7)
+       {
+         q->sons[i].coordoct[0]+=power;
+         q->sons[i].coordoct[1]+=power;
+         q->sons[i].coordoct[2]+=power;
+       }
+
+       q->sons[i].father = q;
+       // if(q->sons[i].coordoct[0] < ncells_x-1 && q->sons[i].coordoct[1] < ncells_y-1 && q->sons[i].coordoct[2] < ncells_z-1)
+       // {
+       //   q->sons[i].ghost = 0;
+       //   q->blf_ip=q->coordoct[2]*ncells_x*ncells_y+q->coordoct[1]*ncells_x+q->coordoct[0]+1;
+       // }
+       // else
+       // {
+       //   q->sons[i].ghost = 1;
+       // }
+     }
+   }
+   return 1;
+ }
+
 
 /**
  * \param mesh pointer toward the mesh structure
